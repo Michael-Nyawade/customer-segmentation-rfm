@@ -1,0 +1,29 @@
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Data files
+data/
+
+# Pyhton cache and logs
+_pycache_/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# Environmental variables/secrets
+.env
+
+# OS-specific files
+.DS_store
+Thumbs.db
+
+# IDE/editor settings
+.vscode/
+.idea/
