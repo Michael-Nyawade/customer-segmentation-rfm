@@ -29,3 +29,49 @@ In this project we use historical transaction data to assign each customer to a 
   - K-Means clustering, scaling, PCA - *`scikit-learn`*
 
 ---
+
+
+## Project Workflow
+
+### 1. Data Cleaning
+
+- Removed rows with missing `CustomerID`
+- Filtered out negative/canceled transactions
+- Created `TotalPrice` = `Quantity × UnitPrice`
+
+### 2. RFM Feature Engineering
+
+- **Recency**: Days since last purchase
+- **Frequency**: Number of invoices per customer
+- **Monetary**: Total money spent
+
+### 3. RFM Segmentation
+
+- Used quantile-based scoring (1–5) for each RFM metric
+- Created an `RFM_Score` and assigned rule-based segments (e.g., **Champions**, **At Risk**, **Big Spenders**)
+
+### 4. K-Means Clustering
+
+- Scaled RFM values using `StandardScaler`
+- Used **Elbow** and **Silhouette** methods to determine `k = 4`
+- Applied **K-Means clustering** and labeled clusters based on behavior
+
+### 5. Cluster Analysis
+
+| Cluster | Recency | Frequency | Monetary  | Description                    |
+| ------- | ------- | --------- | --------- | ------------------------------ |
+| 2       | Low     | Very High | Very High | **VIPs** - top spenders        |
+| 3       | Low     | High      | High      | **Loyal High-Spenders**        |
+| 0       | Medium  | Medium    | Medium    | **Mid-Value Customers**        |
+| 1       | High    | Low       | Low       | **At Risk** - inactive segment |
+
+---
+
+## Visualizations
+
+- **Distribution plots of Recency, Frequency, & Monetary**
+![Distribution plots of Recency, Frequency, & Monetary](images/rfm_distribution_by_segment.png)
+- Bar plots showing segment sizes
+![Bar plots showing segment sizes](images/customer_segments_chart.png)
+
+---
