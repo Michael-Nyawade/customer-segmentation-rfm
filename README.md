@@ -73,5 +73,43 @@ In this project we use historical transaction data to assign each customer to a 
 ![Distribution plots of Recency, Frequency, & Monetary](images/rfm_distribution_by_segment.png)
 - Bar plots showing segment sizes
 ![Bar plots showing segment sizes](images/customer_segments_chart.png)
+- 2D scatter plot (via PCA) of clustered customers:
+![Cluster Plot](images/cluster_plot.png)
+---
 
+## Business Applications
+
+| Strategy           | Description                                   |
+| -------------------| --------------------------------------------- |
+| Targeted Marketing | Send personalized offers per segment          |
+| Loyalty Programs   | Reward top-spending, high-frequency customers |
+| Re-engagement      | Win back at-risk or inactive customers        |
+| Upsell Strategy    | Focus on mid-value customers to increase CLV  |
+
+---
+
+## Project Structure
+
+```
+customer-segmentation-rfm/
+│
+├── data/                                      # Raw dataset
+│   └── rfm_customer_segments.csv
+│
+├── images/                                    # Visual assets and plots
+│   ├── cluster_plot.png
+│   ├── customer_segments_chart.png
+│   ├── optimal_no_of_clusters_elbow.png
+│   ├── optimal_no_of_clusters_silhouette.png
+│   └── rfm_distribution_by_segment.png
+│
+├── output/                                    # Exported datasets
+│   └── rfm_segments_with_clusters.csv
+│
+├── rfm-analysis.ipynb                         # Jupyter notebook for analysis
+│
+├── README.md                                  # Project documentation
+│
+└── .gitignore                                 # Files excluded from version control
+```
 ---

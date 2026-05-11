@@ -3,6 +3,7 @@
 
 # Data files
 data/
+output/
 
 # Pyhton cache and logs
 _pycache_/
