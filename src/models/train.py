@@ -1,4 +1,4 @@
-""""Model training utilities: scaling, k-selection diagnostics, and KMeans fitting."""
+"""Model training utilities: scaling, k-selection diagnostics, and KMeans fitting."""
 
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
@@ -125,3 +125,57 @@ def load_model_artifacts(models_dir: str) -> tuple:
     kmeans = joblib.load(kmeans_file)
     scaler = joblib.load(scaler_file)
     return kmeans, scaler
+
+
+# Cluster profiling and labeling
+CLUSTER_LABELS_BY_RANK = ["VIP", "Loyal High-Spender", "Mid-Value", "At Risk"]
+
+
+def profile_clusters(rfm: pd.DataFrame, cluster_col: str = "Cluster") -> pd.DataFrame:
+    """Compute mean R/F/M and size per cluster.
+
+    Parameters
+    ----------
+    rfm : pd.DataFrame
+        Must contain Recency, Frequency, Monetary, and cluster_col.
+    cluster_col : str
+        Column containing cluster assignments.
+
+    Returns
+    -------
+    pd.DataFrame
+        Indexed by cluster id, with Recency, Frequency, Monetary means and Count.
+    """
+    summary = rfm.groupby(cluster_col)[["Recency", "Frequency", "Monetary"]].mean().round(1)
+    summary["Count"] = rfm[cluster_col].value_counts()
+    return summary
+
+
+def label_clusters_by_value(cluster_summary: pd.DataFrame) -> dict:
+    """Derive a cluster id -> descriptive label mapping, ranked by mean Monetary.
+
+    Clusters are ranked by mean Monetary (descending) and assigned labels
+    from CLUSTER_LABELS_BY_RANK in order. This avoids hardcoding a cluster
+    index -> label mapping, since KMeans cluster indices are arbitrary and
+    can differ between runs even with a fixed random_state.
+
+    Parameters
+    ----------
+    cluster_summary : pd.DataFrame
+        Output of profile_clusters. Must have exactly len(CLUSTER_LABELS_BY_RANK)
+        rows for the label set to apply cleanly.
+
+    Returns
+    -------
+    dict
+        Mapping of cluster id -> descriptive label.
+    """
+    if len(cluster_summary) != len(CLUSTER_LABELS_BY_RANK):
+        raise ValueError(
+            f"Expected {len(CLUSTER_LABELS_BY_RANK)} clusters to apply named "
+            f"labels, got {len(cluster_summary)}. Update CLUSTER_LABELS_BY_RANK "
+            "or the n_clusters config value to match."
+        )
+
+    ranked_cluster_ids = cluster_summary.sort_values("Monetary", ascending=False).index
+    return dict(zip(ranked_cluster_ids, CLUSTER_LABELS_BY_RANK))
