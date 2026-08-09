@@ -60,13 +60,15 @@ def test_save_and_load_model_artifacts_roundtrip():
     rfm = _make_rfm_df()
     scaled, scaler = scale_rfm_features(rfm)
     kmeans = fit_kmeans(scaled, n_clusters=2, random_state=42)
+    cluster_labels = {0: "Group A", 1: "Group B"}
 
     with tempfile.TemporaryDirectory() as tmp_dir:
-        save_model_artifacts(kmeans, scaler, tmp_dir)
-        loaded_kmeans, loaded_scaler = load_model_artifacts(tmp_dir)
+        save_model_artifacts(kmeans, scaler, cluster_labels, tmp_dir)
+        loaded_kmeans, loaded_scaler, loaded_labels = load_model_artifacts(tmp_dir)
 
         assert (kmeans.predict(scaled) == loaded_kmeans.predict(scaled)).all()
         assert np.allclose(scaler.mean_, loaded_scaler.mean_)
+        assert loaded_labels == cluster_labels
 
 def test_load_model_artifacts_raises_when_missing():
     with tempfile.TemporaryDirectory() as tmp_dir:

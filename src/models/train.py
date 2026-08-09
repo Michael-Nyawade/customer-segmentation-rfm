@@ -80,8 +80,10 @@ def fit_kmeans(scaled_features, n_clusters: int, random_state: int = 42) -> KMea
     return kmeans
 
 
-def save_model_artifacts(kmeans: KMeans, scaler: StandardScaler, models_dir: str) -> None:
-    """Persist the fitted KMeans model and scaler to disk.
+def save_model_artifacts(
+    kmeans: KMeans, scaler: StandardScaler, cluster_labels: dict, models_dir: str
+) -> None:
+    """Persist the fitted KMeans model, scaler, and cluster label mapping to disk.
 
     Parameters
     ----------
@@ -89,6 +91,11 @@ def save_model_artifacts(kmeans: KMeans, scaler: StandardScaler, models_dir: str
         Fitted model from fit_kmeans.
     scaler : StandardScaler
         Fitted scaler from scale_rfm_features.
+    cluster_labels : dict
+        Mapping of cluster id -> descriptive label, from label_clusters_by_value.
+        Persisted so prediction on new data reuses the training-time label
+        assignment rather than re-deriving labels from a potentially small
+        or unrepresentative new batch.
     models_dir : str
         Directory to save artifacts into (created if it doesn't exist).
     """
@@ -97,26 +104,28 @@ def save_model_artifacts(kmeans: KMeans, scaler: StandardScaler, models_dir: str
 
     joblib.dump(kmeans, models_path / "kmeans_model.joblib")
     joblib.dump(scaler, models_path / "scaler.joblib")
+    joblib.dump(cluster_labels, models_path / "cluster_labels.joblib")
 
 
 def load_model_artifacts(models_dir: str) -> tuple:
-    """Load the persisted KMeans model and scaler from disk.
+    """Load the persisted KMeans model, scaler, and cluster label mapping.
 
     Parameters
     ----------
     models_dir : str
-        Directory containing kmeans_model.joblib and scaler.joblib.
+        Directory containing the saved artifacts.
 
     Returns
     -------
     tuple
-        (kmeans: KMeans, scaler: StandardScaler)
+        (kmeans: KMeans, scaler: StandardScaler, cluster_labels: dict)
     """
     models_path = Path(models_dir)
     kmeans_file = models_path / "kmeans_model.joblib"
     scaler_file = models_path / "scaler.joblib"
+    labels_file = models_path / "cluster_labels.joblib"
 
-    if not kmeans_file.exists() or not scaler_file.exists():
+    if not kmeans_file.exists() or not scaler_file.exists() or not labels_file.exists():
         raise FileNotFoundError(
             f"Model artifacts not found in {models_path}. "
             "Train and save the model first."
@@ -124,7 +133,8 @@ def load_model_artifacts(models_dir: str) -> tuple:
 
     kmeans = joblib.load(kmeans_file)
     scaler = joblib.load(scaler_file)
-    return kmeans, scaler
+    cluster_labels = joblib.load(labels_file)
+    return kmeans, scaler, cluster_labels
 
 
 # Cluster profiling and labeling
