@@ -1,0 +1,6 @@
+data:
+  raw: data/raw
+  processed: data/processed
+
+model:
+  random_state: 42

@@ -1,0 +1,8 @@
+Store generated figures and visualizations here.
+
+Examples:
+- confusion_matrix.png
+- roc_curve.png
+- feature_importance.png
+
+This directory is ignored by Git.
