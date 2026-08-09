@@ -11,3 +11,6 @@ rfm:
 model:
   random_state: 42
   n_clusters: 4
+
+models:
+  dir: models
