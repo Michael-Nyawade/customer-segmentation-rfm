@@ -14,3 +14,7 @@ model:
 
 models:
   dir: models
+
+reports:
+  figures_dir: reports/figures
+  
