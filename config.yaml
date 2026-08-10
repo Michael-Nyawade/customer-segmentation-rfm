@@ -1,0 +1,20 @@
+data:
+  raw: data/raw
+  processed: data/processed
+  raw_filename: rfm_customer_segments.csv
+  output_filename: rfm_segments_with_clusters.csv
+
+rfm:
+  n_bins: 5
+  reference_date_offset_days: 1
+
+model:
+  random_state: 42
+  n_clusters: 4
+
+models:
+  dir: models
+
+reports:
+  figures_dir: reports/figures
+  

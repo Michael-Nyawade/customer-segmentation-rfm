@@ -1,0 +1,9 @@
+Store trained model artifacts here.
+
+Examples:
+- model.pkl
+- model.joblib
+- model.onnx
+- model.keras
+
+This directory is ignored by Git.

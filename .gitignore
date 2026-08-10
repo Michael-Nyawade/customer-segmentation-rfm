@@ -1,30 +1,44 @@
-# Jupyter Notebook checkpoints
-.ipynb_checkpoints/
-
-# Data files
-data/
-output/
-
-# Pyhton cache and logs
-_pycache_/
-*.pyc
-*.pyo
-*.pyd
-*.log
-
 # Virtual environments
 venv/
 env/
 .venv/
 .env/
 
-# Environmental variables/secrets
+# Environment variables / secrets
 .env
 
-# OS-specific files
-.DS_store
-Thumbs.db
+# Python cache, compiled files, and logs
+__pycache__/
+*.py[cod]
+*.log
 
-# IDE/editor settings
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Raw and processed datasets
+data/raw/*
+data/processed/*
+
+# Keep the data directory structure
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Trained model artifacts
+models/*
+
+# Keep the models directory structure
+!models/.gitkeep
+
+# Generated figures and visualizations
+reports/figures/*
+
+# Keep the figures directory structure
+!reports/figures/.gitkeep
+
+# IDE / Editor settings
 .vscode/
 .idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
