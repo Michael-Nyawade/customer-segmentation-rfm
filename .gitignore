@@ -23,12 +23,6 @@ data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 
-# Trained model artifacts
-models/*
-
-# Keep the models directory structure
-!models/.gitkeep
-
 # Generated figures and visualizations
 reports/figures/*
 
