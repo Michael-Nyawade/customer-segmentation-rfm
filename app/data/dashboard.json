@@ -1,0 +1,47 @@
+{
+  "total_customers": 4338,
+  "cluster_counts": {
+    "Mid-Value": 3054,
+    "At Risk": 1067,
+    "Loyal High-Spender": 204,
+    "VIP": 13
+  },
+  "segment_counts": {
+    "Others": 1831,
+    "At Risk": 1074,
+    "Loyal Customer": 773,
+    "Champion": 348,
+    "Lost": 201,
+    "Big Spender": 111
+  },
+  "cluster_summary": [
+    {
+      "label": "At Risk",
+      "recency": 248.1,
+      "frequency": 1.6,
+      "monetary": 480.6,
+      "count": 1067
+    },
+    {
+      "label": "Loyal High-Spender",
+      "recency": 15.5,
+      "frequency": 22.3,
+      "monetary": 12709.1,
+      "count": 204
+    },
+    {
+      "label": "Mid-Value",
+      "recency": 43.7,
+      "frequency": 3.7,
+      "monetary": 1359.0,
+      "count": 3054
+    },
+    {
+      "label": "VIP",
+      "recency": 7.4,
+      "frequency": 82.5,
+      "monetary": 127338.3,
+      "count": 13
+    }
+  ]
+}
