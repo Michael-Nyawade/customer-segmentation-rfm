@@ -1,0 +1,10 @@
+{
+  "services": {
+    "frontend": { "root": "app/" },
+    "api": { "root": ".", "entrypoint": "app.api.predict:app" }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": { "service": "api" } },
+    { "source": "/(.*)", "destination": { "service": "frontend" } }
+  ]
+}
