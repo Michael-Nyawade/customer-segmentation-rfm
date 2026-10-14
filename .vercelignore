@@ -1,10 +1,10 @@
-venv/
-notebooks/
-tests/
-reports/
-data/
-scripts/
-.pytest_cache/
+/venv/
+/notebooks/
+/tests/
+/reports/
+/data/
+/scripts/
+/.pytest_cache/
 __pycache__/
 *.ipynb
 README.md

@@ -25,6 +25,7 @@ def main():
 
     dashboard_data = {
         "total_customers": len(rfm),
+        "total_monetary": float(rfm["Monetary"].sum()),
         "cluster_counts": rfm["Cluster_Label"].value_counts().to_dict(),
         "segment_counts": rfm["Segment"].value_counts().to_dict(),
         "cluster_summary": [

@@ -1,9 +1,202 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Customer Segmentation</title>
-  </head>
-  <body>
-    <h1>Placeholder - frontend coming soon</h1>
-  </body>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#f3eee4" />
+  <title>Customer Segmentation Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a href="#" class="brand" id="brandLink">
+        <span class="brand-mark"></span>
+        <strong>Customer Segmentation Report</strong>
+      </a>
+      <nav class="nav" aria-label="Primary">
+        <button class="nav-btn active" data-view="overview">Overview</button>
+        <button class="nav-btn" data-view="predictor">Predictor</button>
+        <button class="nav-btn" data-view="methodology">Methodology</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- Overview -->
+    <section id="overview" class="view active">
+      <div class="hero-stats" id="heroStats">
+        <div class="metric-card"><span class="metric-label">Loading report…</span></div>
+      </div>
+
+      <div class="card">
+        <div class="table-scroll">
+          <table class="ledger hero-ledger" id="heroLedger" aria-label="Segment summary">
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <h2>Segment Ledger</h2>
+      <p class="description">
+        Every customer in the training set, sorted into value tiers by a K-Means
+        clustering model, and separately scored by a rule-based system using
+        Recency, Frequency, and Monetary thresholds. Shown here for comparison.
+      </p>
+
+      <div class="card">
+        <div class="table-scroll">
+          <table class="ledger main-ledger" id="clusterLedger" aria-label="Cluster summary">
+            <thead>
+              <tr><th>Segment</th><th>Accounts</th><th>Recency</th><th>Frequency</th><th>Monetary</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="charts">
+        <div class="card chart-panel">
+          <h3>Accounts per cluster</h3>
+          <p class="caption">
+            Clusters are labeled by ranking each group's average spend. VIP
+            accounts spend the most and buy most often; At Risk accounts have
+            gone the longest without purchasing.
+          </p>
+          <div class="chart-wrap"><canvas id="clusterChart"></canvas></div>
+        </div>
+        <div class="card chart-panel">
+          <h3>Rule-based segment distribution</h3>
+          <p class="caption">
+            Segments assigned by quantile-scoring each account's R/F/M values
+            and applying threshold rules -- e.g. a Champion scores in the top
+            band on all three measures.
+          </p>
+          <div class="chart-wrap"><canvas id="segmentChart"></canvas></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Predictor -->
+    <section id="predictor" class="view">
+      <h2>Account Lookup</h2>
+      <p class="description">
+        Score a customer using the trained model - enter their RFM values
+        directly, or upload transaction history and let the lookup compute
+        RFM for you.
+      </p>
+
+      <div class="input-mode-toggle">
+        <button class="mode-btn active" data-mode="rfm">Enter RFM Values</button>
+        <button class="mode-btn" data-mode="upload">Upload Transactions</button>
+      </div>
+
+      <div id="rfmMode" class="mode-panel active">
+        <div class="card slip">
+          <div class="slip-row">
+            <label><span class="input-title">Recency</span>
+              <span class="label-hint">days since last purchase</span>
+              <span class="input-wrap"><input type="number" id="recencyInput" min="0" value="30" /></span>
+            </label>
+            <label><span class="input-title">Frequency</span>
+              <span class="label-hint">number of past orders</span>
+              <span class="input-wrap"><input type="number" id="frequencyInput" min="1" value="5" /></span>
+            </label>
+            <label><span class="input-title">Monetary</span>
+              <span class="label-hint">total amount spent (£)</span>
+              <span class="input-wrap"><input type="number" id="monetaryInput" min="0" step="10" value="500" /></span>
+            </label>
+          </div>
+          <button id="predictRfmBtn" class="primary-btn">Run Lookup</button>
+        </div>
+      </div>
+
+      <div id="uploadMode" class="mode-panel">
+        <div class="card slip">
+          <p>
+            Upload a CSV with columns <code>InvoiceNo</code>, <code>CustomerID</code>,
+            <code>InvoiceDate</code>, <code>Quantity</code>, <code>UnitPrice</code>.
+            One row per transaction line - an account with several past orders
+            should have multiple rows.
+          </p>
+          <p class="caption">Example format:</p>
+          <div class="table-scroll">
+            <table class="ledger">
+              <thead><tr><th>InvoiceNo</th><th>CustomerID</th><th>InvoiceDate</th><th>Quantity</th><th>UnitPrice</th></tr></thead>
+              <tbody>
+                <tr><td>536365</td><td>17850</td><td>12/01/2010 08:26</td><td>6</td><td>2.55</td></tr>
+                <tr><td>536365</td><td>17850</td><td>12/01/2010 08:26</td><td>8</td><td>2.75</td></tr>
+                <tr><td>536390</td><td>17850</td><td>12/03/2010 09:15</td><td>3</td><td>5.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="upload-controls">
+            <label class="file-input"><input type="file" id="csvFileInput" accept=".csv" /></label>
+            <button id="predictUploadBtn" class="primary-btn">Generate Lookups</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="predictionResult" aria-live="polite"></div>
+    </section>
+
+    <!-- Methodology -->
+    <section id="methodology" class="view">
+      <h2>Methodology</h2>
+      <div class="method-grid">
+        <article class="card method-card">
+          <h3>Business Problem</h3>
+          <p>
+            Not all customers are equally valuable, and treating them the same
+            wastes marketing budget and misses opportunities. This tool identifies
+            which accounts are high-value, loyal, at risk of churning, or worth
+            investing in for growth.
+          </p>
+        </article>
+        <article class="card method-card method-card-wide">
+          <h3>How It Works</h3>
+          <p>
+            Purchase history is summarized into three measures per account:
+            Recency (days since last purchase), Frequency (number of orders), and
+            Monetary (total spend). These feed a rule-based scoring system and a
+            K-Means clustering model, labeled by ranking each cluster's average
+            spend rather than a fixed index - so labeling stays correct however
+            the model is retrained.
+          </p>
+        </article>
+        <article class="card method-card">
+          <h3>Dataset</h3>
+          <p>
+            <a href="https://archive.ics.uci.edu/dataset/352/online+retail" target="_blank" rel="noopener">UCI Online Retail Dataset</a>
+            - around 540,000 transactions from a UK-based online retailer, 2010-2011.
+          </p>
+        </article>
+        <article class="card method-card">
+          <h3>Built With</h3>
+          <div class="tech-list">
+            <span>Python</span><span>pandas</span><span>scikit-learn</span><span>FastAPI</span><span>Vercel</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Customer Segmentation Platform</span>
+      <span class="footer-stack">FastAPI <i></i> Scikit-Learn <i></i> K-Means</span>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
 </html>

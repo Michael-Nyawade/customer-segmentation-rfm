@@ -16,25 +16,75 @@ from src.models.predict import predict_from_rfm, predict_from_transactions
 MODELS_DIR = str(PROJECT_ROOT / "models")
 
 CLUSTER_RECOMMENDATIONS = {
-    "VIP": (
-        "Priority treatment: exclusive offers, loyalty rewards, early access "
-        "to sales, and personalized service."
-    ),
-    "Loyal High-Spender": (
-        "Strengthen loyalty: membership benefits, premium product upsells, "
-        "and subscription-style offers."
-    ),
-    "Mid-Value": (
-        "Encourage more frequent purchases: targeted promotions and "
-        "limited-time discounts."
-    ),
-    "At Risk": (
-        "Re-engagement: win-back emails, \"we miss you\" offers, and "
-        "surveys to understand drop-off."
-    ),
+    "VIP": {
+        "profile": (
+            "Buys often, spends heavily, and purchased recently - the "
+            "profile of your most valuable relationships."
+        ),
+        "actions": [
+            "Assign a dedicated contact for priority service.",
+            "Offer early access to new stock and exclusive pricing.",
+            "Avoid generic mass-market campaigns - treat outreach as white-glove.",
+        ],
+        "priority": (
+            "Protect this relationship. Losing a VIP account has an "
+            "outsized revenue impact given how few accounts reach this tier."
+        ),
+    },
+    "Loyal High-Spender": {
+        "profile": (
+            "Consistent, high-spending, and still active - a step below "
+            "VIP but trending the right direction."
+        ),
+        "actions": [
+            "Introduce a loyalty or membership tier with tangible perks.",
+            "Upsell premium or bundled products based on past purchases.",
+            "Watch recency closely - early slowdown is the best time to re-engage.",
+        ],
+        "priority": "Nurture towards VIP status with consistent, personalized attention.",
+    },
+    "Mid-Value": {
+        "profile": (
+            "Moderate spend and infrequent purchases - your largest "
+            "group, with the most room to grow."
+        ),
+        "actions": [
+            "Send targeted promotions timed to their typical purchase cycle.",
+            "Use limited-time offers to increase purchase frequency.",
+            "Test bundling or cross-sell campaigns to lift average order value.",
+        ],
+        "priority": (
+            "Highest growth potential by volume - small frequency gains "
+            "across this group compound quickly."
+        ),
+    },
+    "At Risk": {
+        "profile": (
+            "Long period of inactivity and low historical spend - "
+            "showing clear signs of disengagement."
+        ),
+        "actions": [
+            "Launch a win-back campaign with a meaningful incentive.",
+            "Send a direct \"we miss you\" message rather than a generic newsletter.",
+            "Survey lapsed accounts to learn why they stopped purchasing.",
+        ],
+        "priority": (
+            "Act before further drop-off - re-engagement gets harder "
+            "the longer recency grows."
+        ),
+    },
 }
 
 app = FastAPI()
+
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5500", "http://127.0.0.1:5500"],
+    allow_methods=["POST"],
+    allow_headers=["Content-Type"],
+)
 
 
 class RFMInput(BaseModel):
