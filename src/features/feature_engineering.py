@@ -3,7 +3,7 @@
 import pandas as pd
 
 
-def compute_rfm(df: pd.DataFrame, reference_date_offset_days: int = 1) -> pd.DataFrame:
+def compute_rfm(df: pd.DataFrame, reference_date_offset_days: int = 1, as_of_date=None) -> pd.DataFrame:
     """Aggregate cleaned transactions into per-customer RFM metrics.
 
     Parameters
@@ -13,13 +13,21 @@ def compute_rfm(df: pd.DataFrame, reference_date_offset_days: int = 1) -> pd.Dat
         CustomerID, InvoiceDate, InvoiceNo, TotalPrice.
     reference_date_offset_days : int
         Days after the latest transaction to use as the Recency reference point.
+    as_of_date : date-like, optional
+        Fixed date to use as the Recency reference point. If provided, the
+        reference date is normalized to midnight and the offset is applied.
 
     Returns
     -------
     pd.DataFrame
         Indexed by CustomerID, with Recency, Frequency, Monetary columns.
     """
-    reference_date = df["InvoiceDate"].max() + pd.Timedelta(days=reference_date_offset_days)
+    if as_of_date is None:
+        reference_date = df["InvoiceDate"].max() + pd.Timedelta(days=reference_date_offset_days)
+    else:
+        reference_date = pd.Timestamp(as_of_date).normalize() + pd.Timedelta(days=reference_date_offset_days)
+        if df["InvoiceDate"].max() >= reference_date:
+            raise ValueError("As-of date is earlier than the most recent transaction in the data.")
 
     rfm = df.groupby("CustomerID").agg({
         "InvoiceDate": lambda x: (reference_date - x.max()).days,

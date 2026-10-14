@@ -44,6 +44,10 @@ async function loadDashboard() {
     const data = await res.json();
     renderHero(data);
     renderLedger(data);
+    await Promise.all([
+      document.fonts.load('9px "IBM Plex Mono"'),
+      document.fonts.load('10px "IBM Plex Sans"'),
+    ]);
     renderCharts(data);
   } catch (err) {
     document.getElementById('heroStats').innerHTML =
@@ -115,7 +119,11 @@ function barChart(canvasId, counts, colors) {
         },
       },
       scales: {
-        x: { grid: { display: false }, border: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } },
+        x: {
+          grid: { display: false },
+          border: { display: false },
+          ticks: { font: { size: 10 }, maxRotation: 45, autoSkip: false },
+        },
         y: {
           beginAtZero: true,
           grid: { color: 'rgba(128,124,112,0.15)' },
@@ -237,11 +245,13 @@ document.getElementById('predictUploadBtn').addEventListener('click', async () =
     return obj;
   });
 
+  const asOf = document.getElementById('asOfInput').value;
+
   try {
     const res = await fetch(`${API_BASE}/transactions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ transactions }),
+      body: JSON.stringify({ transactions, ...(asOf && { as_of_date: asOf }) }),
     });
     if (!res.ok) throw new Error((await res.json()).detail || 'Lookup failed.');
     const data = await res.json();

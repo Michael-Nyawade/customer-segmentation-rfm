@@ -103,6 +103,7 @@ class Transaction(BaseModel):
 
 class TransactionsInput(BaseModel):
     transactions: list[Transaction]
+    as_of_date: Optional[str] = None
 
 
 @app.post("/api/predict/rfm")
@@ -132,11 +133,15 @@ def predict_transactions(payload: TransactionsInput):
     transactions_df = pd.DataFrame([t.model_dump() for t in payload.transactions])
 
     try:
-        result = predict_from_transactions(transactions_df, MODELS_DIR)
+        result = predict_from_transactions(
+            transactions_df, MODELS_DIR, as_of_date=payload.as_of_date
+        )
     except FileNotFoundError as e:
         raise HTTPException(status_code=500, detail=f"Model not found: {e}")
     except KeyError as e:
         raise HTTPException(status_code=400, detail=f"Missing expected column: {e}")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
     customers = [
         {

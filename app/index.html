@@ -137,6 +137,10 @@
               </tbody>
             </table>
           </div>
+          <label class="asof-field"><span class="input-title">As-of date (optional)</span>
+            <span class="label-hint">leave blank to measure recency from the newest transaction in the file</span>
+            <span class="input-wrap"><input type="date" id="asOfInput" /></span>
+          </label>
           <div class="upload-controls">
             <label class="file-input"><input type="file" id="csvFileInput" accept=".csv" /></label>
             <button id="predictUploadBtn" class="primary-btn">Generate Lookups</button>
@@ -160,7 +164,7 @@
             investing in for growth.
           </p>
         </article>
-        <article class="card method-card method-card-wide">
+        <article class="card method-card">
           <h3>How It Works</h3>
           <p>
             Purchase history is summarized into three measures per account:
