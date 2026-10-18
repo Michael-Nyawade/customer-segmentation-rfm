@@ -1,6 +1,7 @@
 """Tests for src.features.feature_engineering."""
 
 import pandas as pd
+import pytest
 
 from src.features.feature_engineering import assign_segments, compute_rfm, score_rfm
 
@@ -82,3 +83,14 @@ def test_assign_segments_handles_skewed_data_without_qcut_error():
     scored = score_rfm(rfm, n_bins=5)  # should not raise
     segmented = assign_segments(scored)
     assert len(segmented) == 20
+
+
+def test_compute_rfm_as_of_date_sets_reference():
+    df = _make_clean_df()  # latest purchase 2011-12-09
+    rfm = compute_rfm(df, reference_date_offset_days=1, as_of_date="2012-01-01")
+    assert rfm.loc["C", "Recency"] == 24
+
+
+def test_compute_rfm_as_of_date_before_data_raises():
+    with pytest.raises(ValueError):
+        compute_rfm(_make_clean_df(), as_of_date="2011-12-01")

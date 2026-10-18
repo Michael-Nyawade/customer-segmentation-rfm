@@ -39,7 +39,10 @@ def predict_from_rfm(rfm: pd.DataFrame, models_dir: str) -> pd.DataFrame:
 
 
 def predict_from_transactions(
-    transactions: pd.DataFrame, models_dir: str, reference_date_offset_days: int = 1
+    transactions: pd.DataFrame,
+    models_dir: str,
+    reference_date_offset_days: int = 1,
+    as_of_date=None,
 ) -> pd.DataFrame:
     """Convenience wrapper: clean raw transactions, compute RFM, then predict.
 
@@ -52,6 +55,8 @@ def predict_from_transactions(
         Directory containing the saved model artifacts.
     reference_date_offset_days : int
         Passed through to compute_rfm.
+    as_of_date : date-like, optional
+        Fixed date to use as the Recency reference point.
 
     Returns
     -------
@@ -59,5 +64,5 @@ def predict_from_transactions(
         RFM data with Cluster and Cluster_Label columns added.
     """
     clean = clean_transactions(transactions)
-    rfm = compute_rfm(clean, reference_date_offset_days)
+    rfm = compute_rfm(clean, reference_date_offset_days, as_of_date)
     return predict_from_rfm(rfm, models_dir)

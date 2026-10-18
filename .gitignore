@@ -36,3 +36,7 @@ reports/figures/*
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Vercel
+.vercel
+.env*
